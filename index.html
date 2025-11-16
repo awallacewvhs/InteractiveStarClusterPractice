@@ -410,18 +410,30 @@ function displayInfo(infoBox, star, event) {
     moveInfoBox(infoBox, event);  // Move the info box next to the mouse
 }
 
-// Function to move the info box to the mouse cursor position
-function moveInfoBox(infoBox, event) {
-    const containerRect = container.getBoundingClientRect(); // Get the position of the container
-    const offsetX = 15; // A little padding from the cursor
-    const offsetY = 15; // A little padding from the cursor
+// --- SMART TOOLTIP POSITIONING ---
 
-    const mouseX = event.clientX - containerRect.left + offsetX;
-    const mouseY = event.clientY - containerRect.top + offsetY;
+const contRect = container.getBoundingClientRect();
+const boxRect = infoBox.getBoundingClientRect();
 
-    infoBox.style.left = `${mouseX}px`;
-    infoBox.style.top = `${mouseY}px`;
+const mouseX = e.clientX - contRect.left;
+const mouseY = e.clientY - contRect.top;
+
+// Default position: right & below cursor
+let x = mouseX + 10;
+let y = mouseY + 10;
+
+// If box goes past right edge → move to left
+if (mouseX + boxRect.width + 20 > contRect.width) {
+    x = mouseX - boxRect.width - 10;
 }
+
+// If box goes past bottom edge → move above
+if (mouseY + boxRect.height + 20 > contRect.height) {
+    y = mouseY - boxRect.height - 10;
+}
+
+infoBox.style.left = `${x}px`;
+infoBox.style.top = `${y}px`;
 
 // Function to hide the info box
 function hideInfo(infoBox) {
